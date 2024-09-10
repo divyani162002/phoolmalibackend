@@ -15,7 +15,12 @@ app.get("/", (req, res) => {
 
 //membership route
 const membershipRoute = require("./routes/membershipRoute")
-app.use("/membership",membershipRoute)
+app.use("/membership", membershipRoute)
+
+
+// shoksandesh route
+const shoksandeshRoute = require("./routes/shoksandeshRoute")
+app.use("/shoksandesh",shoksandeshRoute)
 
 
 
