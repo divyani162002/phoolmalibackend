@@ -78,19 +78,18 @@ exports.addmember = async (req, res) => {
     }
 
     // Extract the parts of the date
-    const day = match[1];
-    const month = match[2];
-    const year = match[3];
+    const day = parseInt(match[1], 10);
+    const month = parseInt(match[2], 10) - 1; // Month is zero-indexed in JS (0 = January)
+    const year = parseInt(match[3], 10);
 
-    // Create a valid JavaScript Date object (YYYY-MM-DD)
-    const formattedDate = new Date(`${year}-${month}-${day}`);
+    // Create a valid JavaScript Date object (using Date.UTC to avoid timezone issues)
+    const formattedDate = new Date(Date.UTC(year, month, day));
 
     // Check if the date is valid
     if (isNaN(formattedDate.getTime())) {
       throw new Error("Invalid date value.");
     }
 
-    // Create a new membership instance
     const member = new Membership({
       name,
       email,
@@ -103,22 +102,19 @@ exports.addmember = async (req, res) => {
       membershiptype,
     });
 
-    // Save the member to the database
     await member.save();
-
-    // Return success response
     return res.status(200).json({
       message: "Member is created",
       member,
     });
   } catch (error) {
-    // Return error response
     return res.status(400).json({
       message: "User not created",
       error: error.message,
     });
   }
 };
+
 
 
 exports.getmembers = async (req, res) => {
