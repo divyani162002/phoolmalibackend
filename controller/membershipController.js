@@ -5,10 +5,23 @@ exports.addmember = async (req, res) => {
     
   try {
       
-     const dateParts = dateofceremony.split(","); // ["22", "04", "24"]
-     const formattedDate = new Date(
-       `20${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`
-     );
+    //  const dateParts = dateofceremony.split(","); // ["22", "04", "24"]
+    //  const formattedDate = new Date(
+    //    `20${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
+     const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+     const match = dob.match(datePattern);
+
+     if (!match) {
+       throw new Error("Invalid date format. Please use DD/MM/YYYY.");
+     }
+
+     // Extract the parts of the date
+     const day = match[1];
+     const month = match[2];
+     const year = match[3];
+
+     // Create the formatted date
+     const formattedDate = new Date(`${year}-${month}-${day}`);
         const member = new Membership({
           name,
           email,
