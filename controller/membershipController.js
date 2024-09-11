@@ -1,60 +1,125 @@
 const Membership = require("../model/membershipSchema")
 
-exports.addmember = async (req, res) => {
-    const {name ,email ,phonenumber , adhaarcard ,state,district,city,dob,membershiptype} =req.body
+// exports.addmember = async (req, res) => {
+//     const {name ,email ,phonenumber , adhaarcard ,state,district,city,dob,membershiptype} =req.body
     
-  try {
+//   try {
       
-    //  const dateParts = dateofceremony.split(","); // ["22", "04", "24"]
-    //  const formattedDate = new Date(
-    //    `20${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
-      const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-      const match = dob.match(datePattern);
+//     //  const dateParts = dateofceremony.split(","); // ["22", "04", "24"]
+//     //  const formattedDate = new Date(
+//     //    `20${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
+//       const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+//       const match = dob.match(datePattern);
 
-      if (!match) {
-        throw new Error("Invalid date format. Please use DD/MM/YYYY.");
-      }
+//       if (!match) {
+//         throw new Error("Invalid date format. Please use DD/MM/YYYY.");
+//       }
 
-      // Extract the parts of the date
-      const day = match[1];
-      const month = match[2];
-      const year = match[3];
+//       // Extract the parts of the date
+//       const day = match[1];
+//       const month = match[2];
+//       const year = match[3];
 
-      // Create a valid JavaScript Date object (YYYY-MM-DD)
-      const formattedDate = new Date(`${year}-${month}-${day}`);
+//       // Create a valid JavaScript Date object (YYYY-MM-DD)
+//       const formattedDate = new Date(`${year}-${month}-${day}`);
 
-      // Check if the date is valid
-      if (isNaN(formattedDate.getTime())) {
-        throw new Error("Invalid date value.");
-      }
-        const member = new Membership({
-          name,
-          email,
-          phonenumber,
-          adhaarcard,
-          state,
-          district,
-          city,
-          dob: formattedDate,
-          membershiptype,
-        }); 
+//       // Check if the date is valid
+//       if (isNaN(formattedDate.getTime())) {
+//         throw new Error("Invalid date value.");
+//       }
+//         const member = new Membership({
+//           name,
+//           email,
+//           phonenumber,
+//           adhaarcard,
+//           state,
+//           district,
+//           city,
+//           dob: formattedDate,
+//           membershiptype,
+//         });
 
-    await member.save()
-    return res.status(200).json({
-      message: "member is created",
-      member,
-    });
+//     await member.save()
+//     return res.status(200).json({
+//       message: "member is created",
+//       member,
+//     });
 
 
-    } catch (error) {
-        return res.status(400).json({
-            message: "User not created",
-            error: error.message,
-        })
+//     } catch (error) {
+//         return res.status(400).json({
+//             message: "User not created",
+//             error: error.message,
+//         })
+//     }
+
+    
+// }
+exports.addmember = async (req, res) => {
+  const {
+    name,
+    email,
+    phonenumber,
+    adhaarcard,
+    state,
+    district,
+    city,
+    dob,
+    membershiptype,
+  } = req.body;
+
+  try {
+    // Regular expression to match the DD/MM/YYYY format
+    const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+    const match = dob.match(datePattern);
+
+    if (!match) {
+      throw new Error("Invalid date format. Please use DD/MM/YYYY.");
     }
 
-    
-}
+    // Extract the parts of the date
+    const day = match[1];
+    const month = match[2];
+    const year = match[3];
+
+    // Create a valid JavaScript Date object (YYYY-MM-DD)
+    const formattedDate = new Date(`${year}-${month}-${day}`);
+
+    // Check if the date is valid
+    if (isNaN(formattedDate.getTime())) {
+      throw new Error("Invalid date value.");
+    }
+
+    // Create a new membership instance
+    const member = new Membership({
+      name,
+      email,
+      phonenumber,
+      adhaarcard,
+      state,
+      district,
+      city,
+      dob: formattedDate, // Store the valid Date object
+      membershiptype,
+    });
+
+    // Save the member to the database
+    await member.save();
+
+    // Return success response
+    return res.status(200).json({
+      message: "Member is created",
+      member,
+    });
+  } catch (error) {
+    // Return error response
+    return res.status(400).json({
+      message: "User not created",
+      error: error.message,
+    });
+  }
+};
+
 
 exports.getmembers = async (req, res) => {
     
