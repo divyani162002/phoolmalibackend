@@ -42,11 +42,6 @@ exports.addshoksandeshDetail = async (req,res) => {
        });
      }
 
-
-
-
-
-
 }
 
 exports.getshoksandeshDetails =async (req,res) => {
