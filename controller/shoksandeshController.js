@@ -1,4 +1,4 @@
-const { findById } = require("../model/membershipSchema");
+// const { findById } = require("../model/membershipSchema");
 const Shoksandesh = require("../model/shoksandeshSchema")
 
 exports.addshoksandeshDetail = async (req,res) => {
@@ -58,7 +58,7 @@ exports.getshoksandeshDetails =async (req,res) => {
          message: "Failed to find details",
          error: error.message, // Include the error message for debugging
        });
-     }
+     } 
     
 }
 exports.getshoksandeshDetail =async (req,res) => {

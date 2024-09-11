@@ -3,7 +3,12 @@ const Membership = require("../model/membershipSchema")
 exports.addmember = async (req, res) => {
     const {name ,email ,phonenumber , adhaarcard ,state,district,city,dob,membershiptype} =req.body
     
-    try {
+  try {
+      
+     const dateParts = dateofceremony.split(","); // ["22", "04", "24"]
+     const formattedDate = new Date(
+       `20${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`
+     );
         const member = new Membership({
           name,
           email,
@@ -12,7 +17,7 @@ exports.addmember = async (req, res) => {
           state,
           district,
           city,
-          dob,
+          dob: formattedDate,
           membershiptype,
         }); 
 

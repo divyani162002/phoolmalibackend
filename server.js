@@ -18,6 +18,10 @@ const membershipRoute = require("./routes/membershipRoute")
 app.use("/membership", membershipRoute)
 
 
+//matrimony route
+const matrimonyRoute = require("./routes/matrimonyRoute")
+app.use("/matrimony",matrimonyRoute)
+
 // shoksandesh route
 const shoksandeshRoute = require("./routes/shoksandeshRoute")
 app.use("/shoksandesh",shoksandeshRoute)
