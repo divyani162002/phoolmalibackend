@@ -8,20 +8,25 @@ exports.addmember = async (req, res) => {
     //  const dateParts = dateofceremony.split(","); // ["22", "04", "24"]
     //  const formattedDate = new Date(
     //    `20${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
-     const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-     const match = dob.match(datePattern);
+      const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+      const match = dob.match(datePattern);
 
-     if (!match) {
-       throw new Error("Invalid date format. Please use DD/MM/YYYY.");
-     }
+      if (!match) {
+        throw new Error("Invalid date format. Please use DD/MM/YYYY.");
+      }
 
-     // Extract the parts of the date
-     const day = match[1];
-     const month = match[2];
-     const year = match[3];
+      // Extract the parts of the date
+      const day = match[1];
+      const month = match[2];
+      const year = match[3];
 
-     // Create the formatted date
-     const formattedDate = new Date(`${year}-${month}-${day}`);
+      // Create a valid JavaScript Date object (YYYY-MM-DD)
+      const formattedDate = new Date(`${year}-${month}-${day}`);
+
+      // Check if the date is valid
+      if (isNaN(formattedDate.getTime())) {
+        throw new Error("Invalid date value.");
+      }
         const member = new Membership({
           name,
           email,
