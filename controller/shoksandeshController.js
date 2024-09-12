@@ -14,39 +14,64 @@ exports.addshoksandeshDetail = async (req,res) => {
      } = req.body;
 
     try {
-      // Phone number validation: should be 10 digits
-      // const phonePattern = /^\d{10}$/;
-      // if (!phonePattern.test(phonenumber)) {
-      //   throw new Error(
-      //     "Invalid phone number. It should be a 10-digit number."
-      //   );
+     
+      // const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+      // const match = dateofceremony.match(datePattern);
+     
+      // if (!match) {
+      //   throw new Error("Invalid date format. Please use DD/MM/YYYY.");
       // }
-      // Regular expression to match the DD/MM/YYYY format
+
+      // // Extract the parts of the date
+      // const day = parseInt(match[1], 10);
+      // const month = parseInt(match[2], 10) - 1; // Month is zero-indexed in JS (0 = January)
+      // const year = parseInt(match[3], 10);
+
+      // // Create a valid JavaScript Date object (using Date.UTC to avoid timezone issues)
+      // const formattedDate = new Date(Date.UTC(year, month, day));
+
+      // // Check if the date is valid
+      // if (isNaN(formattedDate.getTime())) {
+      //   throw new Error("Invalid date value.");
+      // }
+
       const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-      const match = dob.match(datePattern);
 
-      if (!match) {
-        throw new Error("Invalid date format. Please use DD/MM/YYYY.");
-      }
+// Function to validate and parse date
+function validateAndParseDate(dateString) {
+  const match = dateString.match(datePattern);
 
-      // Extract the parts of the date
-      const day = parseInt(match[1], 10);
-      const month = parseInt(match[2], 10) - 1; // Month is zero-indexed in JS (0 = January)
-      const year = parseInt(match[3], 10);
+  if (!match) {
+    throw new Error("Invalid date format. Please use DD/MM/YYYY.");
+  }
 
-      // Create a valid JavaScript Date object (using Date.UTC to avoid timezone issues)
-      const formattedDate = new Date(Date.UTC(year, month, day));
+  // Extract day, month, year from the string
+  const day = parseInt(match[1], 10);
+  const month = parseInt(match[2], 10) - 1; // Month is zero-indexed in JS
+  const year = parseInt(match[3], 10);
 
-      // Check if the date is valid
-      if (isNaN(formattedDate.getTime())) {
-        throw new Error("Invalid date value.");
-      }
+  // Create JavaScript Date object
+  const parsedDate = new Date(Date.UTC(year, month, day));
+
+  // Check if the date is valid
+  if (isNaN(parsedDate.getTime())) {
+    throw new Error("Invalid date value.");
+  }
+
+  return parsedDate;
+}
+
+// Use this function for both 'dob' and 'dateofceremony'
+      const formattedDOB = validateAndParseDate(dob);
+       const formattedDOD = validateAndParseDate(dod);
+      
+const formattedDateOfCeremony = validateAndParseDate(dateofceremony)
       const shoksandesh = new Shoksandesh({
         name,
         age,
-        dob,
-        dod,
-        dateofceremony: formattedDate,
+        dob: formattedDOB,
+        dod: formattedDOD,
+        dateofceremony: formattedDateOfCeremony,
         timing,
         address,
         familyname,
