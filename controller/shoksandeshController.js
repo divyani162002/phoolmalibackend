@@ -15,12 +15,12 @@ exports.addshoksandeshDetail = async (req,res) => {
 
     try {
       // Phone number validation: should be 10 digits
-      const phonePattern = /^\d{10}$/;
-      if (!phonePattern.test(phonenumber)) {
-        throw new Error(
-          "Invalid phone number. It should be a 10-digit number."
-        );
-      }
+      // const phonePattern = /^\d{10}$/;
+      // if (!phonePattern.test(phonenumber)) {
+      //   throw new Error(
+      //     "Invalid phone number. It should be a 10-digit number."
+      //   );
+      // }
       // Regular expression to match the DD/MM/YYYY format
       const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
       const match = dob.match(datePattern);
