@@ -5,7 +5,7 @@ const matrimonyController = require("../controller/metrimonyController");
 
 router.get("/",matrimonyController.getmatrimonyDetails );
 router.get("/:id",matrimonyController.getmatrimonyDetail);
-router.post("/", matrimonyController.addmatrimonyDetails);
+router.post("/", matrimonyController.imageUpload);
 router.delete("/:id",matrimonyController.deletematrimonyDetail);
 
 module.exports = router;
