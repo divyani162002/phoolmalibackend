@@ -1,24 +1,24 @@
 const express = require("express")
 require("dotenv").config()
 const { errorHandler } = require("./middleware/errorHandler")
-const fileupload = require("express-fileupload"); 
+const fileUpload = require('express-fileupload')
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
 
 const app = express()
 const PORT = process.env.PORT || 4000
-
-app.use(
-  fileupload({
-    useTempFiles: true,
-    tempFileDir: "/tmp/",
-  })
-);
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+  })
+);
 
 
 

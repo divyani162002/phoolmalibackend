@@ -38,6 +38,10 @@ const matrimonySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  imgUrl: {
+    type: String,
+    require: true,
+  },
 });
 
 module.exports = mongoose.model("Matrimony",matrimonySchema)

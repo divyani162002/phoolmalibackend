@@ -1,4 +1,7 @@
 const Matrimony = require("../model/matrimonySchema")
+const fs = require("fs");
+const path = require("path");
+const cloudinary = require("cloudinary").v2;
 
 // exports.addmatrimonyDetails =async (req,res) => {
 //     const { name, age, gender, occupation, email,number,bio } = req.body;
@@ -33,36 +36,37 @@ const Matrimony = require("../model/matrimonySchema")
 // }
 
 
-// function FileTypeSupported(type, supportedType) {
-//   return supportedType.includes(type);
-// }
+function FileTypeSupported(type, supportedType) {
+  return supportedType.includes(type);
+}
 
-// async function uploadFileToCloudinary(file, folder) {
-//   const options = { folder };
+async function uploadFileToCloudinary(file, folder) {
+  const options = { folder };
 
-//   // options.resource_type = "auto";
+  // options.resource_type = "auto";
 
-//   return await cloudinary.uploader.upload(file.tempFilePath, options);
-// }
+  return await cloudinary.uploader.upload(file.tempFilePath, options);
+}
 
 exports.imageUpload = async (req, res) => {
+  const { name, age, gender, occupation, email, phonenumber, bio } = req.body;
   try {
+    // console.log(req.body); // Log body to see if it's populated correctly
+    // console.log(req.files);
+    const phonePattern = /^\d{10}$/;
+    if (!phonePattern.test(phonenumber)) {
+      throw new Error("Invalid phone number. It should be a 10-digit number.");
+    }
 
-const phonePattern = /^\d{10}$/;
-if (!phonePattern.test(phonenumber)) {
-  throw new Error("Invalid phone number. It should be a 10-digit number.");
-}
-    const {
-      name,
-     age,
-      gender,
-      occupation,
-      email,
-      number,
-      bio,
-    } = req.body;
-
-    const file = req.files.imageFile;
+    // Check if email already exists
+    const existingMatrimony = await Matrimony.findOne({ email });
+    if (existingMatrimony) {
+      return res.status(400).json({
+        success: false,
+        message: "An entry with this email already exists.",
+      });
+    }
+    const file = req.files.file;
     console.log(file);
 
     const supportedType = ["jpg", "jpeg", "png", "pdf"];
@@ -78,49 +82,47 @@ if (!phonePattern.test(phonenumber)) {
     const response = await uploadFileToCloudinary(file, "matrimony_photo");
     console.log(response);
 
-
-
     try {
       console.log("Files Received ");
 
-      const matrimony = new Matrimony({
- name,
-   age,
-   gender,
-   occupation,
-   email,
-   number,
-   bio,
-    imgUrl: response.secure_url,
-         });
+      const newMatrimony = new Matrimony({
+        name,
+        age,
+        gender,
+        occupation,
+        email,
+        phonenumber,
+        bio,
+        imgUrl: response.secure_url,
+      });
 
-         // Save the new rescue to the database
-         await matrimony.save();
+      // Save the new rescue to the database
+      newMatrimony.save();
 
-         return res
-           .status(200)
-           .json({ message: "rescue added successfully", matrimony });
-       } catch (error) {
-         console.log(error);
-         res.status(500).send("server error- " + error);
-       }
-       //db me entry
-       const fileData = await Matrimony.create({
-            name,
-              age,
-              gender,
-              occupation,
-              email,
-              number,
-              bio,
-                 imgUrl: response.secure_url,
-               });
+      return res
+        .status(200)
+        .json({ message: "matrimony added successfully", newMatrimony });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("server error- " + error);
+    }
+    //db me entry
+    const fileData = await Matrimony.create({
+      name,
+      age,
+      gender,
+      occupation,
+      email,
+      phonenumber,
+      bio,
+      imgUrl: response.secure_url,
+    });
 
-               res.status(200).json({
-                 message: "Image successfully uploaded at",
-                 imgUrl: response.secure_url,
-               });
-             } catch (error) {
+    res.status(200).json({
+      message: "Image successfully uploaded at",
+      imgUrl: response.secure_url,
+    });
+  } catch (error) {
                console.error(error);
                res.status(400).json({
                  success: false,
@@ -129,7 +131,9 @@ if (!phonePattern.test(phonenumber)) {
              }
            };
 
-           (exports.getmatrimonyDetails = async (req, res) => {
+
+
+           exports.getmatrimonyDetails = async (req, res) => {
              try {
                const matrimonyDetails = await Matrimony.find();
                res.json({ matrimonyDetails });
@@ -139,7 +143,7 @@ if (!phonePattern.test(phonenumber)) {
                  error: error.message, // Include the error message for debugging
                });
              }
-           });
+           };
 
 exports.getmatrimonyDetail = async (req, res) => {
     try {
